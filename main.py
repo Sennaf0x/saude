@@ -61,6 +61,25 @@ if 'hora' not in st.session_state:
 
 if 'data' not in st.session_state:
     st.session_state['data'] = dia
+
+col1, col2 = st.columns(2)
+with st.container():
+    st.write('''
+             <h1>Insira os dados</h1>
+             ''',unsafe_allow_html=True)
+    with col1:
+        st.write(f'''<div> 
+                    <p>Data de hoje</p>
+                    <p>{dia}</p>
+                    </div>
+                    ''',unsafe_allow_html=True)
+    with col2:
+        st.write(f'''<div> 
+                    <p>Hora atual</p>
+                    <p>{hora}</p>
+                    </div>
+                    ''', unsafe_allow_html=True)
+
 # Configurando session states
 
 with st.container():
@@ -113,23 +132,6 @@ with st.container():
 
         st.altair_chart(chart, use_container_width=True)
 
-col1, col2 = st.columns(2)
-with st.container():
-    st.write('''
-             <h1>Insira os dados</h1>
-             ''',unsafe_allow_html=True)
-    with col1:
-        st.write(f'''<div> 
-                    <p>Data de hoje</p>
-                    <p>{dia}</p>
-                    </div>
-                    ''',unsafe_allow_html=True)
-    with col2:
-        st.write(f'''<div> 
-                    <p>Hora atual</p>
-                    <p>{hora}</p>
-                    </div>
-                    ''', unsafe_allow_html=True)
 
 col3, col4, col5, col6 = st.columns(4)
 
