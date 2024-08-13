@@ -61,17 +61,17 @@ if 'gsheets' not in st.session_state:
     existing_data = existing_data.dropna(how="all")
     st.session_state['gsheets'] = existing_data 
 
+df = pd.DataFrame(st.session_state['gsheets'])
+
+pesoState = st.session_state['gsheets']['Peso']
+
 if 'peso' not in st.session_state:
-    st.session_state['peso'] = 0
-else:     
-    peso = st.session_state['gsheets']['Peso']
-    df = pd.DataFrame(peso)
-    #print(df)
-    if not df.empty:
-        st.session_state['peso'] = df.iloc[-1][0]
-    else:
-        st.session_state['peso'] = 0
-        
+    if df.empty:
+        st.session_state['peso'] = 'Sem dados'
+    else:    
+        dfPeso = pd.DataFrame(pesoState).dropna(how="all")
+        st.session_state['peso'] = dfPeso.iloc[-1][0]
+  
 # Exibindo o peso do dia atual
 
 if 'hora' not in st.session_state:
@@ -107,84 +107,74 @@ with st.container():
              ''',unsafe_allow_html=True)
 
 #expander do peso
-    with st.expander("Peso (kg)"):
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[12,13],ttl=5)
-        existing_data = existing_data.dropna(how="all")
+with st.expander("Peso (kg)"):
 
-        df = pd.DataFrame(existing_data)
-
-        chart = alt.Chart(df).mark_bar().encode(
-            x='Data_peso',
-            y='Peso'
-        )
-
-        st.altair_chart(chart, use_container_width=True)
+# Tratando dados do gsheets   
+    peso_df = st.session_state['gsheets']['Peso']
+    pesoData_df = st.session_state['gsheets']['Data_peso']
+    df_peso = {'Data_peso':pesoData_df,'Peso':peso_df}
+    peso_chart = pd.DataFrame(data=df_peso)
+# plotando gráfico
+    chart = alt.Chart(peso_chart).mark_bar().encode(
+        x='Data_peso',
+        y='Peso'
+    )
+    st.altair_chart(chart, use_container_width=True)
 
 #Expander da pressão
-    with st.expander("Pressão"):
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[0,1],ttl=5)
-        existing_data = existing_data.dropna(how="all")
+with st.expander("Pressão"):
+# Tratando dados do gsheets   
+    pressao_df = st.session_state['gsheets']['Pressao']
+    pressaoData_df = st.session_state['gsheets']['Data']
+    df_peso = {'Data':pressaoData_df,'Pressao':pressao_df}
+    pressao_chart = pd.DataFrame(data=df_peso)
+# plotando gráfico
+    chart2 = alt.Chart(pressao_chart).mark_bar().encode(
+        x='Data',
+        y='Pressao'
+    )
+    st.altair_chart(chart2, use_container_width=True)
 
-        df = pd.DataFrame(existing_data)
+with st.expander("Glicose"):
+# Tratando dados do gsheets   
+    glicose_df = st.session_state['gsheets']['Glicose']
+    glicoseData_df = st.session_state['gsheets']['Data_glicose']
+    df_glicose = {'Data_glicose':glicoseData_df,'Glicose':glicose_df}
+    glicose_chart = pd.DataFrame(data=df_glicose)
+# plotando gráfico
+    chart3 = alt.Chart(glicose_chart).mark_bar().encode(
+        x='Data_glicose',
+        y='Glicose'
+    )
+    st.altair_chart(chart3, use_container_width=True)
 
-        chart = alt.Chart(df).mark_bar().encode(
-            x='Data',
-            y='Pressao'
-        )
-
-        st.altair_chart(chart, use_container_width=True)        
-
-    with st.expander("Glicose"):
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[3,4],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-
-        df = pd.DataFrame(existing_data)
-
-        chart = alt.Chart(df).mark_bar().encode(
-            x='Data_glicose',
-            y='Glicose'
-        )
-
-        st.altair_chart(chart, use_container_width=True)
-#expander urina        
-    with st.expander("Urina"):
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[6,7],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-
-        df = pd.DataFrame(existing_data)
-
-        chart = alt.Chart(df).mark_bar().encode(
-            x='Data_urina',
-            y='Urina'
-        )
-
-        st.altair_chart(chart, use_container_width=True)
-
-#expander água        
-    with st.expander("Água"):
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[9,10],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-
-        df = pd.DataFrame(existing_data)
-
-        chart = alt.Chart(df).mark_bar().encode(
-            x='Data_agua',
-            y='Agua'
-        )
-
-        st.altair_chart(chart, use_container_width=True)
-
-
+##expander urina        
+with st.expander("Urina"):
+    # Tratando dados do gsheets   
+    urina_df = st.session_state['gsheets']['Urina']
+    urinaData_df = st.session_state['gsheets']['Data_urina']
+    df_urina = {'Data_urina':urinaData_df,'Urina':urina_df}
+    urina_chart = pd.DataFrame(data=df_urina)
+# plotando gráfico
+    chart4 = alt.Chart(urina_chart).mark_bar().encode(
+        x='Data_urina',
+        y='Urina'
+    )
+    st.altair_chart(chart4, use_container_width=True)
+#
+##expander água        
+with st.expander("Água"):
+# Tratando dados do gsheets   
+    agua_df = st.session_state['gsheets']['Agua']
+    aguaData_df = st.session_state['gsheets']['Data_agua']
+    df_agua = {'Data_agua':aguaData_df,'Agua':agua_df}
+    agua_chart = pd.DataFrame(data=df_agua)
+# plotando gráfico
+    chart5 = alt.Chart(agua_chart).mark_bar().encode(
+        x='Data_agua',
+        y='Agua'
+    )
+    st.altair_chart(chart5, use_container_width=True)
 
 #Formulários
 st.write('''
@@ -198,32 +188,33 @@ with st.container():
     with col3:
         with st.form(key="form1"):
             pressao = st.number_input('Insira a pressão', key="pressao")
-            submit_button = st.form_submit_button(label='+Pressão')
-        if submit_button:
-            url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-            conn = st.connection("gsheets", type=GSheetsConnection)
-            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
-            st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
-            if pressao == 0: 
-                st.error('Insira os valores nos campos obrigatórios')
-            else: 
-                new_data = pd.DataFrame({
-                                        "Pressao":[pressao],
-                                        "Data":[dia], 
-                                        "Hora":[hora], 
-                                        })
-                updated_df = pd.concat([st.session_state['gsheets'], new_data], ignore_index=True)
-                #st.session_state['df'].to_csv('dados.csv', index=False)
-                st.success("Dados adicionados com sucesso!")
+            submit_button1 = st.form_submit_button(label='+Pressão')
+            if submit_button1:
+                url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
+                conn = st.connection("gsheets", type=GSheetsConnection)
+                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+                st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
+                if pressao == 0: 
+                    st.error('Insira os valores nos campos obrigatórios')
+                else: 
+                    new_data = pd.DataFrame({
+                                            "Pressao":[pressao],
+                                            "Data":[dia], 
+                                            "Hora":[hora], 
+                                            })
+                    updated_df = pd.concat([st.session_state['gsheets'], new_data], ignore_index=True)
+                    #st.session_state['df'].to_csv('dados.csv', index=False)
+                    st.success("Dados adicionados com sucesso!")
 
-                #Atualizando a planilha
-                conn.update(spreadsheet=url, data=updated_df)
+                    #Atualizando a planilha
+                    conn.update(spreadsheet=url, data=updated_df)
+                    st.rerun()
     
     with col4:
         with st.form(key="form2"):
             glicose = st.number_input('Insira a glicose', key="glicose")
-            submit_button = st.form_submit_button(label='+Glicose')
-        if submit_button:
+            submit_button2 = st.form_submit_button(label='+Glicose')
+        if submit_button2:
             url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
             conn = st.connection("gsheets", type=GSheetsConnection)
             st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11],ttl=5)
@@ -245,8 +236,8 @@ with st.container():
     with col5:
         with st.form(key="form3"):
             urina = st.number_input('Insira a urina', key="urina")
-            submit_button = st.form_submit_button(label='+Urina')
-        if submit_button:
+            submit_button3 = st.form_submit_button(label='+Urina')
+        if submit_button3:
             st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
             if urina == 0: 
                 st.error('Insira os valores nos campos obrigatórios')
@@ -269,9 +260,9 @@ with st.container():
     with col6:
         with st.form(key="form4"):
             agua = st.number_input('Insira a água', key="agua")
-            submit_button = st.form_submit_button(label='+Água')
+            submit_button4 = st.form_submit_button(label='+Água')
             
-        if submit_button:
+        if submit_button4:
             url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
             conn = st.connection("gsheets", type=GSheetsConnection)
             st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
@@ -292,26 +283,27 @@ with st.container():
     with col7:
         with st.form(key="form5"):
             peso1 = st.number_input('Insira seu peso', key="peso1")
-            submit_button = st.form_submit_button(label='+Peso')
+            submit_button5 = st.form_submit_button(label='+Peso')
             
-        if submit_button:
-            url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-            conn = st.connection("gsheets", type=GSheetsConnection)
-            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
-            st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
-            if peso1 == 0: 
-                st.error('Insira os valores nos campos obrigatórios')
-            else: 
-                new_data = pd.DataFrame({
-                                        "Peso":[peso1],
-                                        "Data_peso":[dia], 
-                                        "Hora_peso":[hora], 
-                                        })
-                updated_df = pd.concat([st.session_state['gsheets'], new_data], ignore_index=True)
-                #st.session_state['df'].to_csv('dados.csv', index=False)
-                st.success("Dados adicionados com sucesso!")
-                #Atualizando a planilha
-                conn.update(spreadsheet=url, data=updated_df)    
+            if submit_button5:
+                url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
+                conn = st.connection("gsheets", type=GSheetsConnection)
+                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+                st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
+                if peso1 == 0: 
+                    st.error('Insira os valores nos campos obrigatórios')
+                else: 
+                    new_data = pd.DataFrame({
+                                            "Peso":[peso1],
+                                            "Data_peso":[dia], 
+                                            "Hora_peso":[hora], 
+                                            })
+                    updated_df = pd.concat([st.session_state['gsheets'], new_data], ignore_index=True)
+                    #st.session_state['df'].to_csv('dados.csv', index=False)
+                    st.success("Dados adicionados com sucesso!")
+                    #Atualizando a planilha
+                    conn.update(spreadsheet=url, data=updated_df)
+                    st.rerun()    
 
 with st.container():
     st.write('''
@@ -319,130 +311,86 @@ with st.container():
              ''',unsafe_allow_html=True)
                     
     with st.expander("Pressão"):
-        # Estabelecendo conexão com o gsheets
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[0,1,2],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-        df = pd.DataFrame(existing_data)
-        
         # Cabeçalho da tabela
         st.write('''
                 <div class="grid-container">
-                        <div class="card-1"><strong>Pressa (Psi)</strong></div>
+                        <div class="card-1"><strong>Pressao (Psi)</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
-                        <div class="card-1"><strong>Hora</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
-        for row in existing_data.itertuples(index=True):
+        pressao_chart = pressao_chart.dropna(how="all")
+        for row in pressao_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
                         <div class="card">{row.Pressao}</div>
                         <div class="card">{row.Data}</div>
-                        <div class="card">{row.Hora}</div>
                     ''',unsafe_allow_html=True)    
 
-    with st.expander("Glicose"):
-        # Estabelecendo conexão com o gsheets
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[3,4,5],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-        df = pd.DataFrame(existing_data)
-        
+    with st.expander("Glicose"):        
         # Cabeçalho da tabela
-        # st.write('Medição de glicose')
         st.write('''
                 <div class="grid-container">
                         <div class="card-1"><strong>Glicose</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
-                        <div class="card-1"><strong>Hora</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
-        for row in existing_data.itertuples(index=True):
+        glicose_chart = glicose_chart.dropna(how="all")
+        for row in glicose_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
                         <div class="card">{row.Glicose}</div>
                         <div class="card">{row.Data_glicose}</div>
-                        <div class="card">{row.Hora_glicose}</div>
-                    ''',unsafe_allow_html=True)
-
-    with st.expander("Urina"):
-        # Estabelecendo conexão com o gsheets
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[6,7,8],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-        df = pd.DataFrame(existing_data)
-        
+                    ''',unsafe_allow_html=True)          
+    
+    with st.expander("Urina"):        
         # Cabeçalho da tabela
-        # st.write('Volume de Urina expelido')
         st.write('''
                 <div class="grid-container">
                         <div class="card-1"><strong>Urina</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
-                        <div class="card-1"><strong>Hora</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
-        for row in existing_data.itertuples(index=True):
+        urina_chart = urina_chart.dropna(how="all")
+        for row in urina_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
                         <div class="card">{row.Urina}</div>
                         <div class="card">{row.Data_urina}</div>
-                        <div class="card">{row.Hora_urina}</div>
-                    ''',unsafe_allow_html=True)
-
-    with st.expander("Consumo de Água"):
-        # Estabelecendo conexão com o gsheets
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[9,10,11],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-        df = pd.DataFrame(existing_data)
-        
+                    ''',unsafe_allow_html=True)          
+    
+    with st.expander("Água"):        
         # Cabeçalho da tabela
-        # st.write('Consumo de água')
         st.write('''
                 <div class="grid-container">
                         <div class="card-1"><strong>Água</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
-                        <div class="card-1"><strong>Hora</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
-        for row in existing_data.itertuples(index=True):
+        agua_chart = agua_chart.dropna(how="all")
+        for row in agua_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
                         <div class="card">{row.Agua}</div>
                         <div class="card">{row.Data_agua}</div>
-                        <div class="card">{row.Hora_agua}</div>
-                    ''',unsafe_allow_html=True)
-
-    with st.expander("Peso (kg)"):
-        # Estabelecendo conexão com o gsheets
-        url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
-        conn = st.connection("gsheets", type=GSheetsConnection)
-        existing_data = conn.read(spreadsheet=url, usecols=[12,13,14],ttl=5)
-        existing_data = existing_data.dropna(how="all")
-        df = pd.DataFrame(existing_data)
-        
+                    ''',unsafe_allow_html=True)          
+    
+    with st.expander("Peso"):        
         # Cabeçalho da tabela
-        # st.write('Consumo de água')
         st.write('''
                 <div class="grid-container">
                         <div class="card-1"><strong>Peso</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
-                        <div class="card-1"><strong>Hora</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
-        for row in existing_data.itertuples(index=True):
+        peso_chart = peso_chart.dropna(how="all")
+        for row in peso_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
                         <div class="card">{row.Peso}</div>
                         <div class="card">{row.Data_peso}</div>
-                        <div class="card">{row.Hora_peso}</div>
-                    ''',unsafe_allow_html=True)
+                    ''',unsafe_allow_html=True)          
