@@ -223,7 +223,7 @@ with st.container():
         if submit_button2:
             url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
             conn = st.connection("gsheets", type=GSheetsConnection)
-            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11],ttl=5)
+            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
             st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
             if glicose == 0: 
                 st.error('Insira os valores nos campos obrigatórios')
