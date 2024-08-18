@@ -14,12 +14,12 @@ st.markdown('''
             <style>
             .grid-container-1{
                 display: grid; 
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
                 justify-content: space-between;
             }
             .grid-container{
                 display: grid; 
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(4, 1fr);
             }
             .card{
                 border: 1px solid #ccc; 
@@ -57,7 +57,7 @@ hora = agora.strftime("%H:%M:%S")
 if 'gsheets' not in st.session_state:
     url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
     conn = st.connection("gsheets", type=GSheetsConnection)
-    existing_data = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14],ttl=5)
+    existing_data = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
     existing_data = existing_data.dropna(how="all")
     st.session_state['gsheets'] = existing_data 
 
@@ -102,7 +102,7 @@ with col1:
 # Configurando session states
 
 with st.container():
-    st.write('''
+    st.write('''    
              <h1>Gráficos</h1>
              ''',unsafe_allow_html=True)
 
@@ -124,14 +124,16 @@ with st.expander("Peso (kg)"):
 #Expander da pressão
 with st.expander("Pressão"):
 # Tratando dados do gsheets   
-    pressao_df = st.session_state['gsheets']['Pressao']
+    pressao_df = st.session_state['gsheets']['Pressao_max']
+    pressao_mindf = st.session_state['gsheets']['Pressao_min']
+    batimento_df = st.session_state['gsheets']['Batimento']
     pressaoData_df = st.session_state['gsheets']['Data']
-    df_peso = {'Data':pressaoData_df,'Pressao':pressao_df}
+    df_peso = {'Data':pressaoData_df,'Pressao_max':pressao_df,'Pressao_min':pressao_mindf,'Batimento':batimento_df}
     pressao_chart = pd.DataFrame(data=df_peso)
 # plotando gráfico
     chart2 = alt.Chart(pressao_chart).mark_bar().encode(
         x='Data',
-        y='Pressao'
+        y='Pressao_max'
     )
     st.altair_chart(chart2, use_container_width=True)
 
@@ -187,20 +189,24 @@ with st.container():
 
     with col3:
         with st.form(key="form1"):
-            pressao = st.number_input('Insira a pressão', key="pressao")
+            pressao_max = st.number_input('Insira a pressão máxima', key="pressao_max")
+            pressao_min = st.number_input('Insira a pressão mínima', key="pressao_min")
+            batimento = st.number_input('Insira s batimentos cardiácos', key="batimento")
             submit_button1 = st.form_submit_button(label='+Pressão')
             if submit_button1:
                 url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
                 st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
-                if pressao == 0: 
+                if pressao_max == 0: 
                     st.error('Insira os valores nos campos obrigatórios')
                 else: 
                     new_data = pd.DataFrame({
-                                            "Pressao":[pressao],
+                                            "Pressao_max":[pressao_max],
                                             "Data":[dia], 
-                                            "Hora":[hora], 
+                                            "Hora":[hora],
+                                            "Pressao_min":[pressao_min],
+                                            "Batimento":[batimento] 
                                             })
                     updated_df = pd.concat([st.session_state['gsheets'], new_data], ignore_index=True)
                     #st.session_state['df'].to_csv('dados.csv', index=False)
@@ -253,7 +259,7 @@ with st.container():
 
                 url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
                 
                 #Atualizando a planilha
                 conn.update(spreadsheet=url, data=updated_df)
@@ -265,7 +271,7 @@ with st.container():
         if submit_button4:
             url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
             conn = st.connection("gsheets", type=GSheetsConnection)
-            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+            st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
             st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
             if agua == 0: 
                 st.error('Insira os valores nos campos obrigatórios')
@@ -288,7 +294,7 @@ with st.container():
             if submit_button5:
                 url = "https://docs.google.com/spreadsheets/d/15Ci0Xv_lTrXfbelTJH13bg7tuIkxgCJFdLoKeft1UWA/edit?gid=0#gid=0"
                 conn = st.connection("gsheets", type=GSheetsConnection)
-                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13],ttl=5)
+                st.session_state['gsheets'] = conn.read(spreadsheet=url, usecols=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],ttl=5)
                 st.session_state['gsheets'] = st.session_state['gsheets'].dropna(how="all")
                 if peso1 == 0: 
                     st.error('Insira os valores nos campos obrigatórios')
@@ -314,7 +320,9 @@ with st.container():
         # Cabeçalho da tabela
         st.write('''
                 <div class="grid-container">
-                        <div class="card-1"><strong>Pressao (Psi)</strong></div>
+                        <div class="card-1"><strong>Pressao Máxima(Psi)</strong></div>
+                        <div class="card-1"><strong>Pressao Minima(Psi)</strong></div>
+                        <div class="card-1"><strong>Batimentos (BPM)</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
@@ -323,7 +331,9 @@ with st.container():
         for row in pressao_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
-                        <div class="card">{row.Pressao}</div>
+                        <div class="card">{row.Pressao_max}</div>
+                        <div class="card">{row.Pressao_min}</div>
+                        <div class="card">{row.Batimento}</div>
                         <div class="card">{row.Data}</div>
                     ''',unsafe_allow_html=True)    
 
