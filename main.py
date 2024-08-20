@@ -12,6 +12,11 @@ st.set_page_config(layout="wide")
 # CSS da página
 st.markdown('''
             <style>
+            .grid-container-0{
+                display: grid; 
+                grid-template-columns: repeat(3,1fr);
+                justify-content: space-between;
+            }
             .grid-container-1{
                 display: grid; 
                 grid-template-columns: repeat(4, 1fr);
@@ -20,6 +25,15 @@ st.markdown('''
             .grid-container{
                 display: grid; 
                 grid-template-columns: repeat(4, 1fr);
+            }
+            .card-0{
+                border: 1px solid #ccc; 
+                    color: black;
+                    text-align: center;
+                    align-items:center;
+                    padding: 10px; 
+                    margin: 5px;
+                    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
             }
             .card{
                 border: 1px solid #ccc; 
@@ -40,7 +54,37 @@ st.markdown('''
                     padding: 10px; 
                     margin: 5px;
                     box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+                    }
+            .eqpbllx3{
+                       
+                }
+            .card-2 {
+                    font-size: 12px;
+                    background: black;
+                    color: white; 
+                    border: 1px solid white; 
+                    text-align: center;
+                    align-items:center;
+                    padding: 10px; 
+                    margin: 5px;
+                    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
             }
+            
+            @media (max-width: 480px) {
+            .grid-container{
+                display: grid; 
+                font-size: 11px;
+                grid-template-columns: repeat(4, 0.2fr 0.2fr, 0.2fr, 0.6fr);
+                justify-content: space-between;
+            }
+            .card{
+                font-size: 11px;
+                }   
+            .card-1{
+                font-size: 11px;
+                }   
+            }
+            
             </style>
             ''',unsafe_allow_html=True)
 
@@ -80,10 +124,10 @@ if 'hora' not in st.session_state:
 if 'data' not in st.session_state:
     st.session_state['data'] = dia
     
-col1, col2 = st.columns(2)
-with col1:
+#col1, col2 = st.columns([0.7, 0.3])
+with st.container():
     st.write(f'''
-                <div class="grid-container-1">
+                <div class="grid-container-0">
                     <div> 
                         <p class= "card-1">Data de hoje</p>
                         <p class= "card">{dia}</p>
@@ -320,10 +364,10 @@ with st.container():
         # Cabeçalho da tabela
         st.write('''
                 <div class="grid-container">
-                        <div class="card-1"><strong>PMáx (Psi)</strong></div>
-                        <div class="card-1"><strong>PMin (Psi)</strong></div>
-                        <div class="card-1"><strong>BPM</strong></div>
-                        <div class="card-1"><strong>Data</strong></div>
+                        <div class="card-2"><strong>PMáx (Psi)</strong></div>
+                        <div class="card-2"><strong>PMin (Psi)</strong></div>
+                        <div class="card-2"><strong>BPM</strong></div>
+                        <div class="card-2"><strong>Data</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
         
@@ -331,10 +375,10 @@ with st.container():
         for row in pressao_chart.itertuples(index=True):
             st.write(f'''
                     <div class="grid-container">
-                        <div class="card">{row.Pressao_max}</div>
-                        <div class="card">{row.Pressao_min}</div>
-                        <div class="card">{row.Batimento}</div>
-                        <div class="card">{row.Data}</div>
+                        <div class="card-0">{row.Pressao_max}</div>
+                        <div class="card-0">{row.Pressao_min}</div>
+                        <div class="card-0">{row.Batimento}</div>
+                        <div class="card-0">{row.Data}</div>
                     ''',unsafe_allow_html=True)    
 
     with st.expander("Glicose"):        
