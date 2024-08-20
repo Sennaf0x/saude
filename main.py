@@ -320,9 +320,9 @@ with st.container():
         # Cabeçalho da tabela
         st.write('''
                 <div class="grid-container">
-                        <div class="card-1"><strong>Pressao Máxima(Psi)</strong></div>
-                        <div class="card-1"><strong>Pressao Minima(Psi)</strong></div>
-                        <div class="card-1"><strong>Batimentos (BPM)</strong></div>
+                        <div class="card-1"><strong>PMáx (Psi)</strong></div>
+                        <div class="card-1"><strong>PMin (Psi)</strong></div>
+                        <div class="card-1"><strong>BPM</strong></div>
                         <div class="card-1"><strong>Data</strong></div>
                     </div>
                 ''',unsafe_allow_html=True)
