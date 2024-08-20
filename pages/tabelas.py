@@ -24,7 +24,7 @@ st.markdown('''
             }
             .grid-container{
                 display: grid; 
-                grid-template-columns: repeat(4, 1fr);
+                grid-template-columns: repeat(5, 1fr);
             }
             .card-0{
                 border: 1px solid #ccc; 
