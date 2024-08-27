@@ -146,6 +146,7 @@ st.markdown('''
             .flex{
                 font-size: 10px
                 background-color: rgba(19, 44, 13, 1);
+                margin: 0;
                 }
             .card{
                 font-size: 11px;
