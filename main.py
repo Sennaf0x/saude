@@ -144,12 +144,14 @@ st.markdown('''
                 justify-content: space-between;
             }
             .flex{
-                font-size: 10px
-                background-color: rgba(19, 44, 13, 1);
+                font-size: 10px;
+                background-color: rgba(19, 44, 13, 0.3);
                 margin: 0;
                 }
             .card{
                 font-size: 11px;
+                color: white;
+                border: 2px solid white;
                 border-radius: 10px;
                 text-align: center;
                 align-items: center;
@@ -157,7 +159,10 @@ st.markdown('''
                 padding: 5px;
                 }   
             .card-1{
+                border: 2px solid white;
+                background-color: #132c0d;
                 padding: 5px;
+                color: white;
                 align-items: center;
                 border-radius: 10px;
                 font-size: 11px;
