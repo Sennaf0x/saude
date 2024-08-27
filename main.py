@@ -15,11 +15,36 @@ st.set_page_config(
 # CSS da página
 st.markdown('''
             <style>
-            .grid-container-0{
-                display: grid; 
-                grid-template-columns: repeat(3,1fr);
-                justify-content: space-between;
+            
+            *{
+                margin: 0;
+                padding: 0;
+                
             }
+            
+            .titulo1{
+                background-color: #132c0d;
+                margin: 10px 0;
+                text-align: center;
+                color: white;
+                width: 100%;
+                border-radius: 10px;
+                box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+            }
+            
+            .block-container{
+                background-color: #00C6A9;
+            }
+            
+            .flex{
+                display: flex;
+                margin: 10px;
+                width: 100%;
+                flex-direction: inline; 
+                justify-content: space-between;
+                box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+                }
+                
             .grid-container-1{
                 display: grid; 
                 grid-template-columns: repeat(4, 1fr);
@@ -31,37 +56,39 @@ st.markdown('''
             }
             .card-0{
                 border: 1px solid #ccc; 
-                    color: black;
-                    text-align: center;
-                    align-items:center;
-                    padding: 10px; 
-                    margin: 5px;
-                    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-            }
+                color: black;
+                text-align: center;
+                align-items:center;
+                padding: 10px; 
+                margin: 5px;
+                box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+            }   
             .card{
-                border: 1px solid #ccc; 
-                    color: black;
-                    text-align: center;
-                    align-items:center;
-                    padding: 10px; 
-                    margin: 5px;
-                    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-            }
+                font-size: 14px;
+                width: 100%;
+                color: black;
+                text-align: center;
+                background-color: white;
+                margin: 1px;
+                align-items:center;
+                border-radius: 10px 100px / 120px;
+                background: rgba(219, 234, 213, 0.3);
+                }
             .card-1 {
-                    font-size: 12px;
-                    background: black;
-                    color: white; 
-                    border: 1px solid white; 
-                    text-align: center;
-                    align-items:center;
-                    padding: 10px; 
-                    margin: 5px;
-                    box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
-                    }
+                border-radius: 10px 100px / 120px;
+                font-size: 14px;
+                width: 100%;
+                background-color: #132c0d;
+                color: white; 
+                text-align: center;
+                align-items:center;
+                margin:0;
+                }
                     
             .eqpbllx1{
-                    background-color: #00C6A9;
+                    background-color: #132c0d;
                     color: white;
+                    border-radius: 10px;
                     font-family: "Georgia", Times, Times New Roman, serif;
             }
     
@@ -71,7 +98,7 @@ st.markdown('''
                     }
     
             .eqpbllx0{
-                background-color: #E1E11F;
+                background-color: #00C6A9;
             }
             
             .e10yg2by1{
@@ -79,6 +106,8 @@ st.markdown('''
                 margin-top: 10px;
                 align-items: center; 
             }
+            
+            
             
             .ef3psqc7{
                 background-color: #00C6A9;
@@ -109,15 +138,27 @@ st.markdown('''
             
             @media (max-width: 480px) {
             .grid-container{
-                display: grid; 
+                display: grid;
                 font-size: 11px;
                 grid-template-columns: repeat(4, 0.2fr 0.2fr, 0.2fr, 0.6fr);
                 justify-content: space-between;
             }
+            .flex{
+                font-size: 10px
+                background-color: rgba(19, 44, 13, 1);
+                }
             .card{
                 font-size: 11px;
+                border-radius: 10px;
+                text-align: center;
+                align-items: center;
+                align-self: center;
+                padding: 5px;
                 }   
             .card-1{
+                padding: 5px;
+                align-items: center;
+                border-radius: 10px;
                 font-size: 11px;
                 }   
             }
@@ -164,18 +205,18 @@ if 'data' not in st.session_state:
 #col1, col2 = st.columns([0.7, 0.3])
 with st.container():
     st.write(f'''
-                <div class="grid-container-0">
-                    <div> 
-                        <p class= "card-1">Data de hoje</p>
-                        <p class= "card">{dia}</p>
+                <div class="flex green-color">
+                    <div class="flex"> 
+                        <div class= "card-1">Data de hoje</div>    
+                        <div class= "card">{dia}</div>
                     </div>
-                    <div> 
-                        <p class="card-1">Hora atual</p>
-                        <p class="card">{hora}</p>
+                    <div class="flex"> 
+                        <div class="card-1">Hora atual</div>
+                        <div class="card">{hora}</div>
                     </div>
-                    <div> 
-                        <p class="card-1">Peso Diário (Kg)</p>
-                        <p class="card">{st.session_state['peso']}</p>
+                    <div class="flex"> 
+                        <div class="card-1">Peso Diário (Kg)</div>
+                        <div class="card">{st.session_state['peso']}</div>
                     </div>
                 </div>
                     ''', unsafe_allow_html=True)
@@ -211,7 +252,7 @@ with st.container():
 
 #Formulários
 st.write('''
-         <h1>Insira os dados</h1>
+         <h1 class="titulo1">Insira os dados</h1>
          ''',unsafe_allow_html=True)   
 
 col3, col4, col5, col6, col7 = st.columns(5)
